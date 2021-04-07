@@ -1,0 +1,64 @@
+#states
+s0
+s1
+s2
+s3
+s111
+s210
+s301
+s400
+#initial
+s0
+#acycepting
+#alphabet
+a
+b
+c
+0
+1
+00
+01
+10
+11
+#transitions
+s111:10>s301
+s111:11>s400
+s111:00>s400
+s111:01>s400
+
+s210:10>s210
+s210:11>s111
+s210:00>s400
+s210:01>s400
+
+s301:10>s301
+s301:11>s400
+s301:00>s400
+s301:01>s400
+
+s400:10>s210
+s400:11>s111
+s400:00>s400
+s400:01>s400
+
+            for (int j = 1; j < M; j++)
+            {
+                aya[j] = 1 / (dy * dy);
+                byb[j] = (-2 / dt) - 2 / (dy * dy);
+                cyc[j] = 1 / (dy * dy);
+                dyd[j] = -((u[n - 1][i + 1][j] + u[n - 1][i-1][j ]) / (dx * dx)) + 2 * ((1 / dx * dx) - (1 / dt)) * u[n - 1][i][j];
+            }
+            cy_dash[1] = cyc[1] / byb[1];
+            dy_dash[1] = (dyd[1] - aya[1] * instant[i][0]) / byb[1];
+            for (int j = 2; j < (M - 1); j++)
+            {
+                cy_dash[j] = cyc[j] / (byb[j] - aya[j] * cy_dash[j - 1]);
+                dy_dash[j] = (dyd[j] - aya[j] * dy_dash[j - 1]) / (byb[j] - aya[j] * cy_dash[j - 1]);
+            }
+            instant[i][M-1] = (dyd[M - 1] - cyc[M - 1] * instant[i][M] - aya[M - 1] * dy_dash[M - 2]) / (byb[M - 1] - aya[M - 1] * cy_dash[M - 2]);
+
+            for (int j = M - 2; j >= 1; j--)
+            {
+                //cout << "c' " << i << " =" << cy_dash[j] << " ;d' " << i << " =" << dy_dash[j] << endl;
+                instant[i][j] = dy_dash[j] - cy_dash[j] * instant[i][j+1];
+            }
